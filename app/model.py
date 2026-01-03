@@ -27,7 +27,7 @@ def load_data(user_input):
     domain = detect_domain(user_input)
 
     # Load static dataset and tag it
-    df_static = pd.read_csv("../data/jobs.csv")
+    df_static = pd.read_csv("/data/jobs.csv")
     df_static["portal"] = "Local Dataset"
     df_static["apply_link"] = "https://pk.indeed.com"
 
