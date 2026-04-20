@@ -16,10 +16,13 @@ Ranks jobs based on relevance
 Identifies missing skills
 Suggests learning resources
 
-Screenshots of Workflow:
+Scr.eenshots of Workflow:
 <img width="1118" height="698" alt="p4" src="https://github.com/user-attachments/assets/d02f78e0-5e31-4cf2-a880-4aef1b22743f" />
+<br>
 <img width="1295" height="809" alt="p2" src="https://github.com/user-attachments/assets/0ccb0d72-dbb1-4ee5-8e9b-eeb88a90f5da" />
+<br>
 <img width="1095" height="684" alt="p3" src="https://github.com/user-attachments/assets/59ab9646-fb78-4d9a-afee-4431a77828d5" />
+<br>
 <img width="1118" height="698" alt="p4" src="https://github.com/user-attachments/assets/02b1d27f-0d48-4e1c-8a07-5158a7ae5799" />
 
 
