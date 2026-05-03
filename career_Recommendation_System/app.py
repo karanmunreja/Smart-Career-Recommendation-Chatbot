@@ -1,3 +1,28 @@
+# ============================================================
+# CareerLens - Smart Career Recommendation Chatbot
+# ============================================================
+# Copyright (c) 2026 Karan Munreja. All rights reserved.
+#
+# PROPRIETARY AND CONFIDENTIAL
+# This software and all associated documentation are proprietary to Karan Munreja.
+# Unauthorized copying, distribution, modification, or reuse of this software,
+# in whole or in part, is strictly prohibited without explicit written permission
+# from the copyright holder.
+#
+# NO LICENSE GRANTED - NO REUSE PERMITTED
+# This code is provided as-is for personal use only.
+# Any commercial use, reproduction, or redistribution is forbidden.
+#
+# Project Repository: https://github.com/karanmunreja/Smart-Career-Recommendation-Chatbot
+# Author: Karan Munreja
+# Created: 2026
+# ============================================================
+# Description:
+# This module implements the main Streamlit web interface for CareerLens,
+# a career recommendation system that matches user profiles with job opportunities
+# in the Pakistan job market and suggests learning resources for skill gaps.
+# ============================================================
+
 import streamlit as st
 from utils import extractResumeText
 from model import analyze_jobs,recommend_resources
@@ -8,7 +33,7 @@ st.set_page_config(
     layout="wide"
 )
 
-THEME_COLOR = "#3F3DE0"
+tHEME_COLOR = "#3F3DE0"
 
 # ================== STYLES ==================
 st.markdown(
@@ -48,7 +73,7 @@ body {{
 .title {{
     font-size: 62px;
     font-weight: 700;
-    color: {THEME_COLOR};
+    color: {{THEME_COLOR}};
 }}
 
 .logo {{
@@ -68,7 +93,7 @@ body {{
 .divider {{
     width: 110px;
     height: 3px;
-    background: linear-gradient(90deg, {THEME_COLOR}, #8B8AF8);
+    background: linear-gradient(90deg, {{THEME_COLOR}}, #8B8AF8);
     margin: 18px auto;
     border-radius: 99px;
 }}
@@ -160,7 +185,7 @@ body {{
 .icon {{
     position: absolute;
     font-size: 34px;
-    color: {THEME_COLOR};
+    color: {{THEME_COLOR}};
     opacity: 0.85;
     animation: float 6s ease-in-out infinite;
 }}
@@ -199,7 +224,7 @@ body {{
     font-weight: 600 !important;
     padding: 10px 22px !important;
     border-radius: 10px !important;
-    background: linear-gradient(90deg, {THEME_COLOR}, #6366F1) !important;
+    background: linear-gradient(90deg, {{THEME_COLOR}}, #6366F1) !important;
     color: white !important;
     border: none !important;
 }}
@@ -207,163 +232,3 @@ body {{
 """,
     unsafe_allow_html=True
 )
-
-# ================= HERO =================
-st.markdown(
-    """
-<div class="hero">
-    <i class="icon l1 fa-solid fa-laptop-code"></i>
-    <i class="icon l2 fa-solid fa-database"></i>
-    <i class="icon l3 fa-solid fa-chart-line"></i>
-    <i class="icon l4 fa-solid fa-code"></i>
-    <i class="icon r1 fa-solid fa-briefcase"></i>
-    <i class="icon r2 fa-solid fa-user-tie"></i>
-    <i class="icon r3 fa-solid fa-house-laptop"></i>
-    <i class="icon r4 fa-solid fa-clipboard-list"></i>
-    <div class="center">
-        <div class="title">
-            <span class="logo">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                CareerLens
-            </span>
-        </div>
-        <div class="divider"></div>
-        <div class="keywords">
-            <span>Job Match</span>
-            <span>Resume Parsing</span>
-            <span>Skill Gaps</span>
-            <span>Courses</span>
-        </div>
-        <div class="info-box">
-            Discover the right career path based on your skills and resume
-        </div>
-        <div class="cta-box">
-            <a href="#career-form" class="cta-link">
-                <i class="fa-solid fa-arrow-down"></i>
-                Start by entering your skills
-            </a>
-        </div>
-    </div>
-</div>
-""",
-    unsafe_allow_html=True
-)
-
-# ================= FORM =================
-st.markdown('<div id="career-form" class="form-section">', unsafe_allow_html=True)
-
-st.markdown("## 🔍 Find Your Best Career Match")
-
-with st.form("career_form"):
-    skills = st.text_input("Your Skills", placeholder="e.g. python, sql, data analysis")
-    experience = st.text_input("Your Experience", placeholder="e.g. 2 years")
-    resume = st.file_uploader(
-        "Upload Resume (optional)",
-        type=["pdf", "docx"],
-        help="Uploading a resume improves match accuracy"
-    )
-    submit = st.form_submit_button("✨ Get Career Recommendations")
-
-st.markdown("</div></div>", unsafe_allow_html=True)
-
-if submit:
-    if not skills.strip() and resume is None:
-        st.error("Please enter your skills or upload a resume.")
-        st.stop()
-    combined_profile=""
-    if skills.strip():
-        combined_profile+=f"{skills}"
-    if experience.strip():
-        combined_profile +=f"{experience}"
-    if resume is not None:
-        resume_text=extractResumeText(resume)
-        combined_profile+=f"{resume_text}"
-    combined_profile=combined_profile.strip()
-    status=st.empty()
-    status.chat_message("assistant").write("🔍 Analyzing current job market in Pakistan for your profile...")
-    results=analyze_jobs(combined_profile)
-    status.empty()
-
-    if not results:
-        st.chat_message("assistant").write("❌ No relevant jobs found for your profile at the moment.")
-        st.stop()
-    st.chat_message("assistant").write(f"📌 Found **{len(results)}** matching jobs:"
-    )
-    well_matched_count = 0
-    not_well_matched_count = 0
-    for job in results:
-        if job["match_level"] == "Perfect":
-            well_matched_count += 1
-        else:
-            not_well_matched_count += 1
-
-
-
-    # ---------- PRE-CALCULATE MATCH COUNTS ----------
-  
-
-   
-
-    # ---------- MATCH SUMMARY ----------
-    st.subheader("📊 Match Summary")
-    st.success(f"✅ Well matched jobs: {well_matched_count}")
-    st.warning(f"⚠️ Not well matched jobs: {not_well_matched_count}")
-
-    # ---------- JOB CARDS ----------
-    for i in range(0, len(results), 2):
-        cols = st.columns(2)
-
-        for col, res in zip(cols, results[i:i + 2]):
-            with col:
-
-                st.markdown(
-                    f"""
-                    <div style="
-                        background-color: LightSeaGreen;
-                        padding: 18px;
-                        border-radius: 18px;
-                        margin-bottom: 8px;
-                    ">
-                        <h3>👨‍💼 {res['job']}</h3>
-                        <p><b>Portal:</b> {res.get('portal', 'Job Portal')}</p>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-                if res["match_level"] == "Perfect":
-                    st.success("✅ Perfect Match")
-                else:
-                    st.warning("🟡 Partial / Not Well Matched")
-
-                portal = res.get("portal", "").lower()
-
-                if "linkedin" in portal:
-                    apply_link = "https://www.linkedin.com/jobs/" 
-                elif "rozee" in portal:
-                    apply_link = "https://www.rozee.pk/"
-                else:
-                    apply_link = "https://www.google.com/search?q=jobs+in+pakistan"
-
-                st.link_button("Apply Now", apply_link)
-
-                if res["match_level"] != "Perfect":
-                    with st.expander("🔎 Why not a good match?"):
-                        if res["missing_skills"]:
-                            st.markdown(f"**Missing skills:** {', '.join(res['missing_skills'])}" )
-                        else:
-                            st.markdown("**Missing skills:** None explicitly listed")
-
-                        resources = recommend_resources(res["missing_skills"])
-                        if resources:
-                            st.markdown("🎓 **Recommended learning:**")
-                            for r in resources:
-                                st.markdown(f"- {r}")
-
-    st.chat_message("assistant").write(
-        "💡 Tip: Improve missing skills or gain experience to increase your match score."
-    )
-
-
-
-
