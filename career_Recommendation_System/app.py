@@ -204,7 +204,7 @@ body {{
     border: none !important;
 }}
 /* ================= FOOTER ================= */
-.footer {
+.footer {{
     text-align: center;
     margin-top: 50px;
     padding: 20px;
@@ -213,7 +213,7 @@ body {{
     font-size: 14px;
     color: #6b7280;
     font-family: 'Poppins', sans-serif;
-}
+}}
 </style>
 """,
     unsafe_allow_html=True
